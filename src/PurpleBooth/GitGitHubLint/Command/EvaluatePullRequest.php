@@ -34,7 +34,7 @@ class EvaluatePullRequest extends Command
         $this->setName(self::COMMAND_NAME);
         $this->setDescription("Check the style of commit messages in a pull request");
 
-        $help = '';
+        $help  = '';
         $help .= "Evaluates a the commits in a pull request and checks that their messages match the style advised by ";
         $help .= "Git. It will then update the \"status\" in github (that little dot next to the commits).\n";
         $help .= "\n";
@@ -92,9 +92,9 @@ class EvaluatePullRequest extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $io       = new SymfonyStyle($input, $output);
-        $config   = new Client();
-        $lintTool = new GitHubLintImplementation($config);
+        $styleHelper = new SymfonyStyle($input, $output);
+        $config      = new Client();
+        $lintTool    = new GitHubLintImplementation($config);
 
         $authenticationType = Client::AUTH_HTTP_TOKEN;
 
@@ -110,14 +110,14 @@ class EvaluatePullRequest extends Command
         $printableName    = "$gitHubUsername/$gitHubRepository#$pullRequestId";
 
 
-        $io->title(self::COMMAND_NAME);
-        $io->comment("Analysing PR $printableName");
+        $styleHelper->title(self::COMMAND_NAME);
+        $styleHelper->comment("Analysing PR $printableName");
         $lintTool->analyse(
             $gitHubUsername,
             $gitHubRepository,
             (int)$pullRequestId
         );
-        $io->success("Finished!");
+        $styleHelper->success("Finished!");
 
         return 0;
     }
