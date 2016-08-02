@@ -20,6 +20,8 @@ The validations it implements are:
 * Do not end the subject line with a period
 * Wrap the body at 72 characters
 
+[the one described by Chris Beams]: http://chris.beams.io/posts/git-commit/
+
 ## Getting Started
 
 ### Prerequisities
