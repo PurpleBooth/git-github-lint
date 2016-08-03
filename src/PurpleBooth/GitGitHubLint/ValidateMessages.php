@@ -2,6 +2,8 @@
 declare(strict_types = 1);
 namespace PurpleBooth\GitGitHubLint;
 
+use PurpleBooth\GitLintValidators\Message;
+
 /**
  * This will evaluate messages with a status and set them on the message
  *
@@ -16,7 +18,7 @@ interface ValidateMessages
      *
      * @param Message[] $messages
      *
-     * @return null
+     * @return void
      */
     public function validate(array $messages);
 }

@@ -3,8 +3,8 @@
 namespace spec\PurpleBooth\GitGitHubLint\Status;
 
 use PhpSpec\ObjectBehavior;
-use PurpleBooth\GitGitHubLint\Status\Status;
 use PurpleBooth\GitGitHubLint\Status\SuccessStatus;
+use PurpleBooth\GitLintValidators\Status\Status;
 
 class SuccessStatusSpec extends ObjectBehavior
 {
@@ -16,11 +16,6 @@ class SuccessStatusSpec extends ObjectBehavior
     function it_has_weight_0()
     {
         $this->getWeight()->shouldReturn(0);
-    }
-
-    function it_has_success_state()
-    {
-        $this->getState()->shouldReturn('success');
     }
 
     function it_has_message()
@@ -36,9 +31,5 @@ class SuccessStatusSpec extends ObjectBehavior
     function it_is_a_good_status()
     {
         $this->isPositive()->shouldReturn(true);
-    }
-
-    function it_should_provide_a_descriptive_url() {
-        $this->getDetailsUrl()->shouldReturn("http://chris.beams.io/posts/git-commit/");
     }
 }

@@ -46,7 +46,7 @@ class CommitMessageServiceImplementation implements CommitMessageService
         $messages = [];
 
         foreach ($response as $commit) {
-            $messages[] = new MessageImplementation($commit['sha'], $commit['commit']['message']);
+            $messages[] = new GitHubMessageImplementation($commit['commit']['message'], $commit['sha']);
         }
 
         return $messages;
