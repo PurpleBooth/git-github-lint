@@ -2,9 +2,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## Unreleased
+## 1.0.0
 ### Changed
 - Fixed the URLs in the [README](README.md)
+- Moved all shareable logic out of the repository into [PurpleBooth/git-lint-validators]
+
+[PurpleBooth/git-lint-validators]: https://github.com/PurpleBooth/git-lint-validators
 
 ## 0.1.1 - 2016-08-02
 ### Changed
@@ -15,6 +18,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - Everything, initial release
 
-[Unreleased]: https://github.com/olivierlacan/keep-a-changelog/compare/v0.1.1..master
-[0.1.1]: https://github.com/olivierlacan/keep-a-changelog/compare/v0.1.0...v0.1.1
+[1.0.0]: https://github.com/PurpleBooth/git-github-lint/compare/v0.1.1..v1.0.0
+[0.1.1]: https://github.com/PurpleBooth/git-github-lint/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/PurpleBooth/git-github-lint/commit/61bea4141315e236358fee319529763543d392a9
