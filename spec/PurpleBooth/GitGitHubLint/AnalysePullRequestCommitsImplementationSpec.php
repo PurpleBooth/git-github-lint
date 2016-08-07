@@ -6,9 +6,7 @@ use PhpSpec\ObjectBehavior;
 use PurpleBooth\GitGitHubLint\AnalysePullRequestCommits;
 use PurpleBooth\GitGitHubLint\AnalysePullRequestCommitsImplementation;
 use PurpleBooth\GitGitHubLint\CommitMessageService;
-use PurpleBooth\GitGitHubLint\Message;
-use PurpleBooth\GitGitHubLint\Status\LimitTheBodyWrapLengthTo72CharactersStatus;
-use PurpleBooth\GitGitHubLint\Status\SuccessStatus;
+use PurpleBooth\GitGitHubLint\GitHubMessage;
 use PurpleBooth\GitGitHubLint\StatusSendService;
 use PurpleBooth\GitGitHubLint\ValidateMessages;
 
@@ -28,28 +26,19 @@ class AnalysePullRequestCommitsImplementationSpec extends ObjectBehavior
         CommitMessageService $commitMessageService,
         ValidateMessages $validationService,
         StatusSendService $statusSendService,
-        Message $message1,
-        Message $message2
+        GitHubMessage $message1,
+        GitHubMessage $message2
     ) {
         $commitMessageService->getMessages('username', 'repo', 10)
                              ->willReturn([$message1, $message2]);
         $validationService->validate([$message1, $message2])
                           ->shouldBeCalled();
 
-        $successStatus = new SuccessStatus();
-        $message1->getSha()->willReturn("a12345");
-        $message1->getStatus()->willReturn($successStatus);
-
-        $failureStatus = new LimitTheBodyWrapLengthTo72CharactersStatus();
-        $message2->getSha()->willReturn("b12345");
-        $message2->getStatus()->willReturn($failureStatus);
-
-        $statusSendService->updateStatus('username', 'repo', "a12345", $successStatus);
-        $statusSendService->updateStatus('username', 'repo', "b12345", $failureStatus);
+        $statusSendService->updateStatus('username', 'repo', $message1);
+        $statusSendService->updateStatus('username', 'repo', $message2);
 
         $this->beConstructedWith($commitMessageService, $validationService, $statusSendService);
 
         $this->check('username', 'repo', 10);
     }
-
 }

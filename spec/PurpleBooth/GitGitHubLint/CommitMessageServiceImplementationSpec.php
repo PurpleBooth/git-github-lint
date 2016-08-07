@@ -7,8 +7,8 @@ use Github\Client;
 use PhpSpec\ObjectBehavior;
 use PurpleBooth\GitGitHubLint\CommitMessageService;
 use PurpleBooth\GitGitHubLint\CommitMessageServiceImplementation;
-use PurpleBooth\GitGitHubLint\Message;
-use PurpleBooth\GitGitHubLint\MessageImplementation;
+use PurpleBooth\GitGitHubLint\GitHubMessage;
+use PurpleBooth\GitGitHubLint\GitHubMessageImplementation;
 
 class CommitMessageServiceImplementationSpec extends ObjectBehavior
 {
@@ -111,7 +111,7 @@ class CommitMessageServiceImplementationSpec extends ObjectBehavior
         $this->getMessages("octocat", 'changes', 93)
              ->shouldContainMessages(
                  [
-                     new MessageImplementation('6dcb09b5b57875f334f61aebed695e2e4193db5e', "Fix all the bugs"),
+                     new GitHubMessageImplementation("Fix all the bugs", '6dcb09b5b57875f334f61aebed695e2e4193db5e'),
                  ]
              );
     }
@@ -120,7 +120,7 @@ class CommitMessageServiceImplementationSpec extends ObjectBehavior
     {
         return [
             'containMessages' => function (array $actualMessages, array $expectedMessages) {
-                $getShas = function (Message $message) {
+                $getShas = function (GitHubMessage $message) {
                     return $message->getSha();
                 };
 

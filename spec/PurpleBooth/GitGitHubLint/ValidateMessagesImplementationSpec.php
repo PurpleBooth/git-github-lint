@@ -4,13 +4,14 @@ namespace spec\PurpleBooth\GitGitHubLint;
 
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
-use PurpleBooth\GitGitHubLint\Message;
-use PurpleBooth\GitGitHubLint\Status\LimitTheTitleLengthTo69CharactersStatus;
+use PurpleBooth\GitGitHubLint\GitHubMessage;
 use PurpleBooth\GitGitHubLint\Status\PreviousFailureStatus;
 use PurpleBooth\GitGitHubLint\Status\SuccessStatus;
-use PurpleBooth\GitGitHubLint\ValidateMessage;
 use PurpleBooth\GitGitHubLint\ValidateMessages;
 use PurpleBooth\GitGitHubLint\ValidateMessagesImplementation;
+use PurpleBooth\GitLintValidators\Message;
+use PurpleBooth\GitLintValidators\Status\CapitalizeTheSubjectLineStatus;
+use PurpleBooth\GitLintValidators\ValidateMessage;
 
 class ValidateMessagesImplementationSpec extends ObjectBehavior
 {
@@ -21,14 +22,12 @@ class ValidateMessagesImplementationSpec extends ObjectBehavior
         $this->shouldHaveType(ValidateMessages::class);
     }
 
-    function it_sets_the_status_in_the_message(Message $message, ValidateMessage $validateMessage)
+    function is_sets_a_succeess_status_if_there_are_none(GitHubMessage $message, ValidateMessage $validateMessage)
     {
-        $status = new SuccessStatus();
-
         $this->beConstructedWith($validateMessage);
-        $validateMessage->validate($message)->willReturn($status);
-        $message->setStatus($status)->shouldBeCalled();
-
+        $message->getStatuses()->willReturn([]);
+        $message->addStatus(Argument::type(SuccessStatus::class))->shouldBeCalled();
+        $validateMessage->validate($message)->shouldBeCalled();
         $this->validate([$message]);
     }
 
@@ -40,21 +39,43 @@ class ValidateMessagesImplementationSpec extends ObjectBehavior
         ValidateMessage $validateMessage
     ) {
         $this->beConstructedWith($validateMessage);
-        $validateMessage->validate($message1)->willReturn(new SuccessStatus());
-        $validateMessage->validate($message2)->willReturn(new LimitTheTitleLengthTo69CharactersStatus());
-        $validateMessage->validate($message3)->willReturn(new SuccessStatus());
+        $validateMessage->validate($message1)->shouldBeCalled();
+        $validateMessage->validate($message2)->shouldBeCalled();
+        $validateMessage->validate($message3)->shouldBeCalled();
 
-        $message1->setStatus(
-            Argument::type(SuccessStatus::class)
-        )->shouldBeCalled();
-        $message2->setStatus(
-            Argument::type(LimitTheTitleLengthTo69CharactersStatus::class)
-        )->shouldBeCalled();
-        $message3->setStatus(
+        $message1->getStatuses()->willReturn([new CapitalizeTheSubjectLineStatus()]);
+        $message2->getStatuses()->willReturn([new CapitalizeTheSubjectLineStatus()]);
+
+        $message3->getStatuses()->willReturn([]);
+        $message3->addStatus(
             Argument::type(PreviousFailureStatus::class)
         )->shouldBeCalled();
 
         $this->validate([$message1, $message2, $message3]);
     }
 
+    function it_sets_the_one_failed_status_triggers_all_following_to_be_earlier_statues_are_not_effected(
+        Message $message1,
+        Message $message2,
+        Message $message3,
+        ValidateMessage $validateMessage
+    ) {
+        $this->beConstructedWith($validateMessage);
+        $validateMessage->validate($message1)->shouldBeCalled();
+        $validateMessage->validate($message2)->shouldBeCalled();
+        $validateMessage->validate($message3)->shouldBeCalled();
+
+        $message1->getStatuses()->willReturn([]);
+        $message2->getStatuses()->willReturn([new CapitalizeTheSubjectLineStatus()]);
+        $message3->getStatuses()->willReturn([]);
+
+        $message1->addStatus(
+            Argument::type(SuccessStatus::class)
+        )->shouldBeCalled();
+        $message3->addStatus(
+            Argument::type(PreviousFailureStatus::class)
+        )->shouldBeCalled();
+
+        $this->validate([$message1, $message2, $message3]);
+    }
 }

@@ -4,6 +4,8 @@ declare(strict_types = 1);
 
 namespace PurpleBooth\GitGitHubLint\Status;
 
+use PurpleBooth\GitLintValidators\Status\Status;
+
 /**
  * This status indicates that there has been a problem in a status prior to this message, however this particular status
  * is fine
@@ -43,19 +45,7 @@ class PreviousFailureStatus implements Status
      */
     public function isPositive() : bool
     {
-        return $this->getState() == Status::STATE_SUCCESS;
-    }
-
-    /**
-     * The GitHub equivalent of this state
-     *
-     * Can be one of pending, success, error, or failure.
-     *
-     * @return string
-     */
-    public function getState() : string
-    {
-        return Status::STATE_FAILURE;
+        return false;
     }
 
     /**

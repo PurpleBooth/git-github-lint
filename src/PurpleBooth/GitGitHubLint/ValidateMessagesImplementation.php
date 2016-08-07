@@ -4,7 +4,9 @@ declare(strict_types = 1);
 namespace PurpleBooth\GitGitHubLint;
 
 use PurpleBooth\GitGitHubLint\Status\PreviousFailureStatus;
-use PurpleBooth\GitGitHubLint\Status\Status;
+use PurpleBooth\GitGitHubLint\Status\SuccessStatus;
+use PurpleBooth\GitLintValidators\Message;
+use PurpleBooth\GitLintValidators\ValidateMessage;
 
 /**
  * This will evaluate messages with a status and set them on the message
@@ -30,28 +32,30 @@ class ValidateMessagesImplementation implements ValidateMessages
     }
 
     /**
+     * Evaluate multiple messages and set the most appropriate status.
+     *
+     * All status will fail after the first failure
+     *
      * @param Message[] $messages
      *
-     * @return null
+     * @return void
      */
     public function validate(array $messages)
     {
-        $seenFailedStatus = null;
+        $previousFailedStatus = null;
 
         /** @var Message $message */
         foreach ($messages as $message) {
-            /** @var Status $status */
-            $status = $this->validateMessage->validate($message);
+            $this->validateMessage->validate($message);
 
-            if (!$status->isPositive()) {
-                $message->setStatus($status);
-                $seenFailedStatus = new PreviousFailureStatus();
-            } else {
-                if ($seenFailedStatus) {
-                    $message->setStatus($seenFailedStatus);
+            if (count($message->getStatuses()) < 1) {
+                if ($previousFailedStatus) {
+                    $message->addStatus($previousFailedStatus);
                 } else {
-                    $message->setStatus($status);
+                    $message->addStatus(new SuccessStatus());
                 }
+            } else {
+                $previousFailedStatus = new PreviousFailureStatus();
             }
         }
     }

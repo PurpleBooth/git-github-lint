@@ -27,7 +27,7 @@ class AnalysePullRequestCommitsImplementation implements AnalysePullRequestCommi
      * AnalyseAndReportOnCommitImplementation constructor.
      *
      * @param CommitMessageService $commitMessageService
-     * @param ValidateMessages      $validationService
+     * @param ValidateMessages     $validationService
      * @param StatusSendService    $statusSendService
      */
     public function __construct(
@@ -52,9 +52,9 @@ class AnalysePullRequestCommitsImplementation implements AnalysePullRequestCommi
         $messages = $this->commitMessageService->getMessages($username, $repository, $pullRequestId);
         $this->validationService->validate($messages);
 
-        /** @var Message $message */
+        /** @var GitHubMessage $message */
         foreach ($messages as $message) {
-            $this->statusSendService->updateStatus($username, $repository, $message->getSha(), $message->getStatus());
+            $this->statusSendService->updateStatus($username, $repository, $message);
         }
     }
 }

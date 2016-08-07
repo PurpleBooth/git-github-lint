@@ -121,38 +121,6 @@ $gitHubLint->analyse('PurpleBooth', 'git-github-lint', 3);
 // -> The commits on your PR should now be updated with a status
 ```
 
-Alternatively you could use the validators alone
-
-```php
-<?php
-
-$messageValidator new ValidateMessagesImplementation(
-    new ValidateMessageImplementation(
-        [
-            new CapitalizeTheSubjectLineValidator(),
-            new DoNotEndTheSubjectLineWithAPeriodValidator(),
-            new LimitTheBodyWrapLengthTo72CharactersValidator(),
-            new LimitTheTitleLengthTo69CharactersValidator(),
-            new SeparateSubjectFromBodyWithABlankLineValidator(),
-            new SoftLimitTheTitleLengthTo50CharactersValidator(),
-        ]
-    )
-);
-
-
-$message
-    = <<<MESSAGE
-This is an example title
-
-This is a message body. This is another part of the body.
-MESSAGE;
-
-$exampleMessage = new MessageImplementation("exampleSha", $message);
-
-$messageValidator->validate([$exampleMessage]);
-// -> Message Objects will now have a Status set on them
-```
-
 Please depend on the interfaces rather than the concrete
 implementations. Concrete implementations may change without causing a
 BC break, interfaces changing will cause major version increment,

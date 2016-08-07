@@ -16,7 +16,7 @@ interface CommitMessageService
      * @param string $repository
      * @param int    $pullRequestId
      *
-     * @return array
+     * @return GitHubMessage[]
      */
     public function getMessages(string $username, string $repository, int $pullRequestId) : array;
 }

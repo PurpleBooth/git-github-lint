@@ -2,8 +2,6 @@
 declare(strict_types = 1);
 namespace PurpleBooth\GitGitHubLint;
 
-use PurpleBooth\GitGitHubLint\Status\Status;
-
 /**
  * Sets statuses on a SHA on GitHub
  *
@@ -14,12 +12,11 @@ interface StatusSendService
     /**
      * Set a SHA in GitHub to a state
      *
-     * @param string $organisation
-     * @param string $repository
-     * @param string $sha
-     * @param Status $status
+     * @param string        $organisation
+     * @param string        $repository
+     * @param GitHubMessage $message
      *
      * @return void
      */
-    public function updateStatus(string $organisation, string $repository, string $sha, Status $status);
+    public function updateStatus(string $organisation, string $repository, GitHubMessage $message);
 }

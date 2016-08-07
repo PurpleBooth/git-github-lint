@@ -6,12 +6,7 @@ namespace PurpleBooth\GitGitHubLint;
 use Github\Client;
 use PhpSpec\Exception\Exception;
 use PurpleBooth\GitGitHubLint\Exception\GitHubLintException;
-use PurpleBooth\GitGitHubLint\Validator\CapitalizeTheSubjectLineValidator;
-use PurpleBooth\GitGitHubLint\Validator\DoNotEndTheSubjectLineWithAPeriodValidator;
-use PurpleBooth\GitGitHubLint\Validator\LimitTheBodyWrapLengthTo72CharactersValidator;
-use PurpleBooth\GitGitHubLint\Validator\LimitTheTitleLengthTo69CharactersValidator;
-use PurpleBooth\GitGitHubLint\Validator\SeparateSubjectFromBodyWithABlankLineValidator;
-use PurpleBooth\GitGitHubLint\Validator\SoftLimitTheTitleLengthTo50CharactersValidator;
+use PurpleBooth\GitLintValidators\ValidatorFactoryImplementation;
 
 /**
  * A vanity interface to make it easier to use this library
@@ -32,19 +27,12 @@ class GitHubLintImplementation implements GitHubLint
      */
     public function __construct(Client $client)
     {
+        $validatorFactory = new ValidatorFactoryImplementation();
+
         $this->analyser = new AnalysePullRequestCommitsImplementation(
             new CommitMessageServiceImplementation($client),
             new ValidateMessagesImplementation(
-                new ValidateMessageImplementation(
-                    [
-                        new CapitalizeTheSubjectLineValidator(),
-                        new DoNotEndTheSubjectLineWithAPeriodValidator(),
-                        new LimitTheBodyWrapLengthTo72CharactersValidator(),
-                        new LimitTheTitleLengthTo69CharactersValidator(),
-                        new SeparateSubjectFromBodyWithABlankLineValidator(),
-                        new SoftLimitTheTitleLengthTo50CharactersValidator(),
-                    ]
-                )
+                $validatorFactory->getMessageValidator()
             ),
             new StatusSendServiceImplementation($client)
         );
