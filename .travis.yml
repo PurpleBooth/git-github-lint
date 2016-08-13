@@ -4,8 +4,14 @@ php:
   - '7.0'
   - nightly
 
-before_script:
-  - composer install
+matrix:
+  fast_finish: true
+  include:
+    - php: '7.0'
+      env: COMPOSER_FLAGS="--prefer-stable --prefer-lowest"
+
+install:
+    - travis_retry composer update ${COMPOSER_FLAGS} --no-interaction
 
 script:
   - vendor/bin/phpspec run
