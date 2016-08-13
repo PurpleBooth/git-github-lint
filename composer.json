@@ -7,7 +7,7 @@
     "php": "^7.0.0",
     "php-http/guzzle6-adapter": "^1.1",
     "symfony/console": "^3.1",
-    "PurpleBooth/git-lint-validators": "^1.0"
+    "PurpleBooth/git-lint-validators": "^1.1.0"
   },
   "bin": ["bin/git-github-lint"],
   "license": "MIT",
@@ -19,6 +19,7 @@
   ],
   "require-dev": {
     "phpspec/phpspec": "^3.0",
+    "phpspec/prophecy": "^1.6.0",
     "squizlabs/php_codesniffer": "*"
   },
   "autoload": {
